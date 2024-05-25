@@ -30,15 +30,15 @@ U29tZSBleGFtcGxlIGVuY3J5cHRlZCBtZXNzYWdlIGJ5dGVzIHdpbGwgaGVyZQ==
 
 I now want to lay out the foundations for the CLI tool, the following are the subcommands of the `vernamvault` command.
 
-### Manage 
+### Generate
+The `generate` subcommand uses the following flags:
+- `-kl/--key-length`: Length of the key in UTF-8 characters plus 16 bytes for the identifier.
+- `-kc/--key-count`: Number of keys to generate.
+- `-o/--output-dir`: Directory where the keys will be stored.
 
-the `manage` sub command lets you manage the keys you have, you can `generate`, `list` and `delete` keys by identifier.
+This takes into account the 16-byte part of the key that is used as the identifier, so the actual length is `LENGTH_OF_KEY_IN_NUMBER_OF_UTF8_CHARACTERS` plus 16 bytes.
 
-#### Generate
-`generate` takes positional arguments `<LENGTH_OF_KEY_IN_N_CHARACTERS> <NUMBER_OF_KEYS> <KEY_DIRECTORY>`
-this takes into account the 16 byte part of the key that is used as the identifer as well, so its really `LENGTH_OF_KEY_IN_NUMBER_OF_UTF8_CHARACTERS` plus 16 bytes.
-
-The keys are generated as single files per key as `.pad` files, named by the first 16 bytes of the key as hexadecimal, and are stored in the `KEY_DIRECTORY`. The user is prompted whether they want to fill that directory with the keys, as it will create a lot of files, this is displayed all in UPPERCASE in YELLOW as to warn the user.
+The keys are generated as single files per key as `.pad` files which are binary files encoded using `serde` for maximum storage efficiency, named by the first 16 bytes of the key as hexadecimal, and are stored in the `KEY_DIRECTORY`. The user is prompted whether they want to fill that directory with the keys, as it will create a lot of files, this is displayed all in UPPERCASE in YELLOW as to warn the user.
 
 ### Encrypt
 The `encrypt` subcommand, takes a mandatory `-m/--message`/`-i/--input-file` flag which can either be inline text or a text file which is full of utf-8 characters only, it also takes a mandatory `-k/--key-dir` flag which points to the directory of where the keys are stored which will be used, a random key is picked from the list of keys. the last flag is the `-o/--output-file` flag, which is the full path to the output file where the encrypted message will be sent, if this flag is not specified, then the armored/base64 text will be output to the screen for them to copy.
